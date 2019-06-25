@@ -18,6 +18,8 @@ class grid_env:
     def __init__(self):
         self.state_space = [0, 1, 2, 3, 4, 5, 6, 7, 8]
         self.action_space = [0, 1, 2, 3]
+        self.state_size = 9
+        self.action_size = 4
         """
         0: left
         1: right
@@ -60,8 +62,6 @@ class grid_env:
         self.grid[self.position[0]][self.position[1]] = ' '
         self.position = (new_row, new_col)
 
-        print(self.position)
-
         new_state = self.get_state()
         reward += self.reward_map[new_state]
 
@@ -75,10 +75,10 @@ class grid_env:
             print('-------------')
 
     def sample_action(self):
-        return random.choice(self.potential_moves())
+        return random.choice(self.potential_moves(self.position))
 
-    def potential_moves(self):
-        r, c = self.position
+    def potential_moves(self, pos):
+        r, c = pos
         moves = []
         
         if c - 1 >= 0:
@@ -91,6 +91,15 @@ class grid_env:
             moves.append(3)
 
         return moves
+
+    def bound_qtable(self, state, action):
+        pos = self.state_to_pos(state)
+        moves = self.potential_moves(pos)
+        
+        if action in moves:
+            return False
+        else:
+            return True
     
     def get_state(self):
         return self.position_to_state(self.position)
@@ -99,4 +108,9 @@ class grid_env:
         r, c = pos
         state = r * 3 + c
         return state
+    
+    def state_to_pos(self, state):
+        c = state % 3
+        r = state // 3
+        return (r, c)
 
