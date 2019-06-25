@@ -2,7 +2,8 @@
 
 from grid_world_env import grid_env
 from qlearn import qlearner
-from mclearn import mclearner
+from mc_on_policy import mc_on
+from mc_off_policy import mc_off
 
 import matplotlib.pyplot as plt
 
@@ -32,8 +33,9 @@ def human_play(env):
 
 def main():
     env = grid_env()
-    agent = qlearner(env)
-    # agent = mclearner(env)
+    # agent = qlearner(env)
+    # agent = mc_on(env)
+    agent = mc_off(env)
     episode_rewards = agent.learn()
 
     plt.plot(episode_rewards)

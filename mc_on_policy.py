@@ -3,7 +3,7 @@ import random
 
 from collections import defaultdict
 
-class mclearner:
+class mc_on:
     def __init__(self, e):
         self.env = e
 
