@@ -2,11 +2,13 @@
 
 from grid_world_env import grid_env
 from qlearn import qlearner
+from mclearn import mclearner
 
 
 def main():
     env = grid_env()
-    agent = qlearner(env)
+    # agent = qlearner(env)
+    agent = mclearner(env)
     agent.learn()
 
     env.render()

@@ -14,10 +14,19 @@ class mclearner:
 
         self.qtable = np.zeros((state_size, action_size))
 
+        state_space = self.env.state_space
+        action_space = self.env.action_space
+
+        for s in state_space:
+            for a in action_space:
+                out_of_bounds = self.env.bound_qtable(s, a)
+                if out_of_bounds:
+                    self.qtable[s, a] = -10000
+
         returns_sum = defaultdict(float)
         returns_count = defaultdict(float)
 
-        total_episodes = 1000000
+        total_episodes = 100
         max_steps = 10
         gamma = 0.9
 
@@ -38,17 +47,11 @@ class mclearner:
                 exp_exp_tradeoff = random.uniform(0,1)
 
                 if exp_exp_tradeoff > epsilon:
-                    open_tiles = self.env.empty_spaces()
-                    open_actions = [-1] * 9
-
-                    for tile in open_tiles:
-                        open_actions[tile] = self.qtable[state,tile]
-
-                    action = np.argmax(open_actions)
+                    action = np.argmax(self.qtable[state,:])
                 else:
                     action = self.env.sample_action()
 
-                new_state, reward, status, done = self.env.step(action)
+                new_state, reward, done = self.env.step(action)
 
                 episode_results.append((state, action, reward))
                 state = new_state
@@ -72,3 +75,6 @@ class mclearner:
 
         self.env.reset()
         print()
+
+    def act(self, state):
+        return np.argmax(self.qtable[state,:])
