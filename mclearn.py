@@ -10,6 +10,7 @@ class mclearner:
     def learn(self):
 
         episode_rewards = []
+        opt_rewards = []
         
         state_size = self.env.state_size
         action_size = self.env.action_size
@@ -78,10 +79,30 @@ class mclearner:
                 self.qtable[state][action] = returns_sum[sa_pair] / returns_count[sa_pair]
 
             epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay_rate * episode)
+            opt_rewards.append(self.opt_test())
+
 
         self.env.reset()
         print()
-        return episode_rewards
+        # return episode_rewards
+        return opt_rewards
 
     def act(self, state):
         return np.argmax(self.qtable[state,:])
+
+    def opt_test(self):
+        state = self.env.reset()
+        total_reward = 0
+        steps = 10
+
+        for step in range(steps):
+            action = self.act(state)
+            new_state, reward, done = self.env.step(action)
+
+            state = new_state
+            total_reward += reward
+
+            if done:
+                break
+
+        return total_reward

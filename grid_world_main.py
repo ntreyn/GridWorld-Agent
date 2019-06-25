@@ -45,7 +45,7 @@ def main():
     
     for n in range(100):
         total_reward = 0
-        while True:
+        for s in range(20):
             action = agent.act(state)
             new_state, reward, done = env.step(action)
 
