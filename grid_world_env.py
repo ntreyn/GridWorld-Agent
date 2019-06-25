@@ -6,12 +6,12 @@ class grid_env:
     reward_map = {
         0: 0,
         1: 0,
-        2: 50,
+        2: 10,
         3: 0,
         4: 0,
         5: 0,
         6: 0,
-        7: 20,
+        7: 5,
         8: 0
     }
     visited_reward_map = {

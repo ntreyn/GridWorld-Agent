@@ -6,6 +6,9 @@ class qlearner:
         self.env = e
 
     def learn(self):
+
+        episode_rewards = []
+
         state_size = self.env.state_size
         action_size = self.env.action_size
 
@@ -20,15 +23,15 @@ class qlearner:
                 if out_of_bounds:
                     self.qtable[v, a] = -1000000
 
-        total_episodes = 100000
+        total_episodes = 100
         max_steps = 10
         learning_rate = 0.7
         gamma = 0.9
 
         epsilon = 1.0
         max_epsilon = 1.0
-        min_epsilon = 0.1
-        decay_rate = 0.0001
+        min_epsilon = 0.005
+        decay_rate = 0.1
 
         for episode in range(total_episodes):
 
@@ -36,7 +39,7 @@ class qlearner:
 
             state = self.env.reset()
             done = False
-            reward = 0
+            total_reward = 0
             step = 0
 
             for step in range(max_steps):
@@ -49,6 +52,7 @@ class qlearner:
                     action = self.env.sample_action()
 
                 new_state, reward, done = self.env.step(action)
+                total_reward += reward
 
                 self.qtable[state, action] = self.qtable[state, action] + learning_rate * (reward + gamma * np.max(self.qtable[new_state,:]) - self.qtable[state, action])
 
@@ -57,10 +61,13 @@ class qlearner:
                 if done:
                     break
 
+            episode_rewards.append(total_reward)
             epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay_rate * episode)
 
         self.env.reset()
         print()
+
+        return episode_rewards
 
     def act(self, state):
         return np.argmax(self.qtable[state,:])
