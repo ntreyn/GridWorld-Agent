@@ -17,23 +17,23 @@ class mclearner:
         state_space = self.env.state_space
         action_space = self.env.action_space
 
-        for s in state_space:
+        for s, v in state_space.items():
             for a in action_space:
-                out_of_bounds = self.env.bound_qtable(s, a)
+                out_of_bounds = self.env.bound_qtable(v, a)
                 if out_of_bounds:
-                    self.qtable[s, a] = -10000
+                    self.qtable[v, a] = -1000000
 
         returns_sum = defaultdict(float)
         returns_count = defaultdict(float)
 
-        total_episodes = 100
+        total_episodes = 100000
         max_steps = 10
         gamma = 0.9
 
         epsilon = 1.0
         max_epsilon = 1.0
         min_epsilon = 0.1
-        decay_rate = 0.0001
+        decay_rate = 0.00001
 
         for episode in range(total_episodes):
 
