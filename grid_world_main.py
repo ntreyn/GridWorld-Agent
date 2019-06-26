@@ -36,7 +36,7 @@ def human_play(env):
 def main(args):
     env = grid_env()
     agent = MODEL_MAP[args.model](env)
-    episode_rewards = agent.learn()
+    episode_rewards = agent.train()
 
     plt.plot(episode_rewards)
     plt.show()

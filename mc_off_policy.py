@@ -6,7 +6,7 @@ class mc_off:
     def __init__(self, e):
         self.env = e
 
-    def learn(self):
+    def train(self):
 
         opt_rewards = []
 

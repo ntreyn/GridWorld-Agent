@@ -7,7 +7,7 @@ class mc_on:
     def __init__(self, e):
         self.env = e
 
-    def learn(self):
+    def train(self):
 
         episode_rewards = []
         opt_rewards = []
