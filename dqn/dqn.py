@@ -1,5 +1,6 @@
 import random
 import torch
+import numpy as np
 
 from dqn_utils import ReplayMemory, Transition
 
@@ -9,6 +10,8 @@ class DQN:
         self.memory_size = 2560
         self.batch_size = 128
 
+        self.cur_step = 0
+
 
         self.memory = ReplayMemory(self.memory_size)
 
@@ -17,12 +20,16 @@ class DQN:
         total_episodes = 100
         max_steps = 10
 
+        self.epsilon = 1.0
+        max_epsilon = 1.0
+        min_epsilon = 0.05
+        decay_rate = 0.1
+
         for episode in range(total_episodes):
 
             state = self.env.reset()
 
             for step in range(max_steps):
-
 
                 action = self.act(state)
 
@@ -39,11 +46,23 @@ class DQN:
 
                 if done:
                     break
+            
+            self.epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-1.0 * self.cur_step / decay_rate)
 
 
 
     def act(self, state):
-        return self.env.sample_action()
+
+        exp_exp_tradeoff = random.uniform(0,1)
+
+        if exp_exp_tradeoff > self.epsilon:
+            action = 0
+        else:
+            action = self.env.sample_action()
+        
+        self.cur_step += 1
+
+        return action
 
     def learn(self):
 
@@ -51,7 +70,7 @@ class DQN:
             return
 
         batch = self.sample()
-    
+        
 
 
     def push(self, *args):

@@ -26,8 +26,8 @@ class qlearner:
 
         total_episodes = 100
         max_steps = 10
-        learning_rate = 0.7
-        gamma = 0.9
+        learning_rate = 0.9
+        gamma = 0.4
 
         epsilon = 1.0
         max_epsilon = 1.0
