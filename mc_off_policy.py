@@ -70,8 +70,6 @@ class mc_off:
         print()
         return opt_rewards
 
-
-
     def act(self, state):
         return np.argmax(self.qtable[state,:])
 

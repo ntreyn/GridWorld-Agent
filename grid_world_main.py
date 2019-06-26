@@ -4,8 +4,10 @@ from grid_world_env import grid_env
 from qlearn import qlearner
 from mc_on_policy import mc_on
 from mc_off_policy import mc_off
+from parameters import MODEL_MAP, core_argparser
 
 import matplotlib.pyplot as plt
+import argparse
 
 def human_play(env):
 
@@ -31,11 +33,9 @@ def human_play(env):
             break
 
 
-def main():
+def main(args):
     env = grid_env()
-    # agent = qlearner(env)
-    # agent = mc_on(env)
-    agent = mc_off(env)
+    agent = MODEL_MAP[args.model](env)
     episode_rewards = agent.learn()
 
     plt.plot(episode_rewards)
@@ -69,4 +69,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    ARGPARSER = argparse.ArgumentParser(parents=[core_argparser()])
+    PARAMS = ARGPARSER.parse_args()
+    main(PARAMS)
