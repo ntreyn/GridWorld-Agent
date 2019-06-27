@@ -3,14 +3,13 @@ import argparse
 from mc_off_policy import mc_off
 from mc_on_policy import mc_on
 from qlearn import qlearner
-# from dqn.dqn import DQN
-# import dqn.dqn_utils
+from dqn import DQN, ReplayMemory, Transition
 
 MODEL_MAP = {
     'qlearn': qlearner,
     'mc_on': mc_on,
-    'mc_off': mc_off
-    # 'dqn': DQN
+    'mc_off': mc_off,
+    'dqn': DQN
 }
 
 def core_argparser():
@@ -21,4 +20,12 @@ def core_argparser():
         type=str,
         help='load model name'
     )
+    argparser.add_argument(
+        '--device',
+        default='cpu',
+        type=str,
+        help='cpu or cuda (default: cpu)'
+    )
+    
+
     return argparser

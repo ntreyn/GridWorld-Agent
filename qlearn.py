@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 class qlearner:
-    def __init__(self, e):
+    def __init__(self, e, params):
         self.env = e
 
     def train(self):

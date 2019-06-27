@@ -32,19 +32,10 @@ def human_play(env):
         if temp == 'n':
             break
 
-
-def main(args):
-    env = grid_env()
-    agent = MODEL_MAP[args.model](env)
-    episode_rewards = agent.train()
-
-    plt.plot(episode_rewards)
-    plt.show()
-    
-    # env.render()
+def test_agent(env, agent):
     state = env.reset()
     test_rewards = []
-    
+
     for n in range(100):
         total_reward = 0
         for s in range(20):
@@ -64,6 +55,20 @@ def main(args):
     
     plt.plot(test_rewards)
     plt.show()
+
+
+def main(args):
+    env = grid_env()
+    agent = MODEL_MAP[args.model](env, args)
+    episode_rewards = agent.train()
+
+    # plt.plot(episode_rewards)
+    # plt.show()
+    
+    # test_agent(env, agent)
+    
+    
+    
     
     
 

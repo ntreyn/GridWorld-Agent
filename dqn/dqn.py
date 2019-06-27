@@ -2,15 +2,22 @@ import random
 import torch
 import numpy as np
 
-from dqn_utils import ReplayMemory, Transition
+from .dqn_utils import ReplayMemory, Transition
 
 class DQN:
-    def __init__(self, e):
+    def __init__(self, e, params):
         self.env = e
         self.memory_size = 2560
         self.batch_size = 128
-
+        
         self.cur_step = 0
+
+        if params.device == 'cpu' or params.device == 'cuda':
+            self.device = params.device
+        else:
+            print("Invalid device: default to cpu")
+            self.device = 'cpu'
+
 
 
         self.memory = ReplayMemory(self.memory_size)
@@ -70,7 +77,7 @@ class DQN:
             return
 
         batch = self.sample()
-        
+
 
 
     def push(self, *args):
@@ -88,3 +95,17 @@ class DQN:
         transitions = self.memory.sample(self.batch_size)
         batch = Transition(*list(zip(*transitions)))
         return batch
+
+    def state_to_tensor(self, state):
+        state_list = []
+
+        state_tuple = self.env.reverse_state_space[state]
+        board_state_tuple = state_tuple[0]
+        location_int = state_tuple[1]
+
+        for tile in board_state_tuple:
+            state_list.append(tile)
+        
+        state_list.append(location_int)
+        state_tensor = torch.tensor(state_list)
+        return state_tensor

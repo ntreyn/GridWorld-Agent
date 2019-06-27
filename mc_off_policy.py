@@ -3,7 +3,7 @@ import numpy as np
 
 
 class mc_off:
-    def __init__(self, e):
+    def __init__(self, e, params):
         self.env = e
 
     def train(self):

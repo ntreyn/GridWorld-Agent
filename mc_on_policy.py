@@ -4,7 +4,7 @@ import random
 from collections import defaultdict
 
 class mc_on:
-    def __init__(self, e):
+    def __init__(self, e, params):
         self.env = e
 
     def train(self):
