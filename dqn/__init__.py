@@ -1,2 +1,2 @@
 from dqn.dqn import DQN
-from dqn.dqn_utils import ReplayMemory, Transition
+from dqn.dqn_utils import ReplayMemory, Transition, NeuralNet

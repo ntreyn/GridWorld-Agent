@@ -8,6 +8,7 @@ from parameters import MODEL_MAP, core_argparser
 
 import matplotlib.pyplot as plt
 import argparse
+import numpy as np
 
 def human_play(env):
 
@@ -33,43 +34,58 @@ def human_play(env):
             break
 
 def test_agent(env, agent):
-    state = env.reset()
     test_rewards = []
+    agent.eval_on()
 
     for n in range(100):
+        state = env.reset()
         total_reward = 0
-        for s in range(20):
+
+        for s in range(10):
             action = agent.act(state)
             new_state, reward, done = env.step(action)
 
-            # env.render()
             state = new_state
             total_reward += reward
-            # print(reward)
 
             if done:
-                env.reset()
                 break
         
         test_rewards.append(total_reward)
     
-    plt.plot(test_rewards)
-    plt.show()
+    return test_rewards
 
 
 def main(args):
     env = grid_env()
-    agent = MODEL_MAP[args.model](env, args)
-    episode_rewards = agent.train()
 
-    # plt.plot(episode_rewards)
-    # plt.show()
+    episode_reward_list = []
+    temp_list = []
+    test_reward_list = []
     
-    # test_agent(env, agent)
+    for n in range(10):
+        agent = MODEL_MAP[args.model](env, args)
+
+        episode_rewards = agent.train()
+        print("Agent {} trained".format(n))
+
+        temp = [r for r in episode_rewards if r > -100]
+
+        episode_reward_list.append(episode_rewards)
+        temp_list.append(temp)
+        
+        test_reward_list.append(test_agent(env, agent))
     
-    
-    
-    
+    for n in range(10):
+        plt.plot(episode_reward_list[n])
+        plt.show()
+
+        plt.plot(temp_list[n])
+        plt.show()
+        
+        plt.plot(test_reward_list[n])
+        plt.show()
+
     
 
 

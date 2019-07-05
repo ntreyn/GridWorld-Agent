@@ -2,6 +2,7 @@
 
 from collections import namedtuple
 import random
+import torch.nn as nn
 
 
 Transition = namedtuple('Transition', ('state', 'action', 'reward', 'next_state', 'done'))
@@ -25,3 +26,24 @@ class ReplayMemory:
     
     def size(self):
         return len(self.memory)
+
+
+class NeuralNet(nn.Module):
+
+    def __init__(self, num_inputs, hidden_size, num_actions):
+        super().__init__()
+
+        self.layers = nn.Sequential(
+            nn.Linear(num_inputs, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
+            nn.Linear(hidden_size, num_actions)
+        )
+
+    def forward(self, x):
+        return self.layers(x)

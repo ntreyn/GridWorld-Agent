@@ -45,7 +45,7 @@ class grid_env:
             [ ' ', ' ', ' ' ],
             [ 'G', ' ', ' ' ]
         ]
-        self.visited = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.visited = [1, 0, 0, 0, 0, 0, 0, 0, 0]
         self.position = (0, 0)
         self.done = False
         self.grid[self.position[0]][self.position[1]] = 'A'
@@ -55,6 +55,12 @@ class grid_env:
 
         reward = -1
         new_row, new_col = self.position
+
+        legal_actions = self.potential_moves(self.position)
+        if action not in legal_actions:
+            new_state = self.get_state()
+            reward = -1000
+            return new_state, reward, self.done
 
         if action == 0:
             new_col += -1

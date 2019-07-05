@@ -3,9 +3,40 @@ import random
 
 from collections import defaultdict
 
-class mc_on:
-    def __init__(self, e, params):
+class mc_oracle:
+    def __init__(self, e, oracle):
         self.env = e
+        self.oracle = oracle
+
+    def get_oracle_episode(self, start_state, end_state):
+        q_oracle = self.oracle.qtable
+        oracle_ep = []
+
+        max_steps = 10
+        state = self.env.reset()
+
+        for step in range(max_steps):
+            action = np.argmax(q_oracle[state,:])
+            new_state, reward, done = self.env.step(action)
+            oracle_ep.append((state, action, reward))
+            state = new_state
+
+            if done:
+                break
+
+        return oracle_ep
+
+    def correct_episode(self, training_ep, new_state):
+        start_state = training_ep[0][0]
+        end_state = new_state
+        opt_ep = self.get_oracle_episode(start_state, end_state)
+        corrected_ep = []
+
+        for step in training_ep:
+            if step in opt_ep:
+                corrected_ep.append(step)
+
+        return corrected_ep
 
     def train(self):
 
@@ -63,6 +94,7 @@ class mc_on:
                 total_reward += reward
 
                 if done:
+                    episode_results = self.correct_episode(episode_results, new_state)
                     break
 
             episode_rewards.append(total_reward)
